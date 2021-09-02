@@ -2,6 +2,8 @@ import heapq
 import queue
 
 '''****HANDLE EDGE CASES LIKE NO PATH,one path etc*****'''
+
+'''*****OPTIMIZE PATH COMPRESSION*****'''
 def find(parent,goal_node,res):
     if parent[goal_node]==-1:
         #res.append(goal_node)
@@ -102,8 +104,7 @@ def A_star_Traversal(cost, heuristic, start_point, goals):
                     #print(f"Added {temp[1]}")
         #print(f"Added {added_neis} neighbours to open list")
 
-    #res = generate_path(path)
-    #return res
+    return [] #if no path found
 
 
 if __name__ == "__main__":
@@ -120,6 +121,6 @@ if __name__ == "__main__":
             [0, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0]]
     heuristic = [0, 5, 7, 3, 4, 6, 0, 0, 6, 5, 0]
     start = 1
-    goals = [6, 7, 10]
+    goals = [11]
 
     print(A_star_Traversal(cost,heuristic,start,goals))
