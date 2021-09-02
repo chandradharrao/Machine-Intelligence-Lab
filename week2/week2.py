@@ -1,8 +1,14 @@
+from queue import PriorityQueue
+
 """
 You can create any other helper funtions.
 Do not modify the given functions
 """
 
+'''
+cost[i][j] -> distance of moving from ith node to jth node
+heurestic[i] -> heuristic estimate of distance from node i to the goal node
+'''
 
 def A_star_Traversal(cost, heuristic, start_point, goals):
     """
