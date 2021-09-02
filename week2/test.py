@@ -1,11 +1,14 @@
 import heapq
+import queue
 
 '''****HANDLE EDGE CASES LIKE NO PATH,one path etc*****'''
 def find(parent,goal_node,res):
     if parent[goal_node]==-1:
-        res.append(goal_node)
+        #res.append(goal_node)
+        res.put(goal_node)
     else:
-        res.append(goal_node)
+        #res.append(goal_node)
+        res.put(goal_node)
         find(parent,parent[goal_node],res)
 
 def A_star_Traversal(cost, heuristic, start_point, goals):
@@ -19,7 +22,7 @@ def A_star_Traversal(cost, heuristic, start_point, goals):
     Returns:
         path: path to goal state obtained from A*(list of ints)
     """
-    path = []
+    path = queue.LifoQueue()
 
     open_list = []
     heapq.heapify(open_list)
@@ -49,6 +52,12 @@ def A_star_Traversal(cost, heuristic, start_point, goals):
             print(f"Goal node is {a_node[1]}")
             print(f"Parent: {parent}")
             find(parent,a_node[1],path)
+
+            temp=[]
+            while not path.empty():
+                temp.append(path.get())
+            path=temp
+            
             return path
 
         #print(type(a_node),a_node)
