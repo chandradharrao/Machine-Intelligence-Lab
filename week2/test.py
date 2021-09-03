@@ -20,6 +20,8 @@ def A_star_Traversal(cost, heuristic, start_point, goals):
     Returns:
         path: path to goal state obtained from A*(list of ints)
     """
+    if len(goal) ==0: return []
+    
     path = queue.LifoQueue()
 
     open_list = []
