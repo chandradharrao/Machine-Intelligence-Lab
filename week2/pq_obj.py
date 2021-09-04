@@ -78,7 +78,7 @@ class MinHeap:
         self.map[f"{self.H[0][1]}"]=0
         
         self.H.pop()
-        self.map.pop(f"{res[1]}")
+        self.map[f"{res[1]}"]=None
         self.size-=1
         self.indx-=1
 
@@ -89,22 +89,64 @@ class MinHeap:
         i=self.map[f"{ele[1]}"]
         self.H[i]=newVal
         self.siftUp(i)
-        self.map.pop(f"{ele[1]}")
+        self.map[f"{ele[1]}"]=None
 
     def is_empty(self):
         return self.size==0
 
+    def isPresent_fetch(self,ele):
+        print(f"Ele recieved {ele}")
+
+        print(f"Map {self.map}")
+        i=self.map.get(f"{ele[1]}")
+
+        if i!=None: 
+            val=self.H[i]
+            print(f"Val {val}")
+            return True,val
+        return False,None
+
 if __name__=="__main__":
-    mH=MinHeap()
-    mH.insert((7,'c'))
-    mH.insert((7,'b'))
-    mH.insert((7,'d'))
-    mH.decreaseValue((7,'d'),(7,'a'))
-    # print(mH.map)
+    # mH=MinHeap()
+    # mH.insert((7,'c'))
+    # mH.insert((7,'b'))
+    # mH.insert((7,'d'))
+    # mH.decreaseValue((7,'d'),(7,'a'))
+    # # print(mH.map)
+    # print(mH.H)
+
+    # while not mH.is_empty():
+    #     print(mH.deleteMin())
+
+    # # print(mH.map)
+    # # print(mH.size)
+
+    mH = MinHeap()
+    mH.insert((5,1))
     print(mH.H)
+    print(mH.deleteMin())
 
-    while not mH.is_empty():
-        print(mH.deleteMin())
+    mH.insert((12,2))
+    mH.insert((12,3))
+    mH.insert((12,5))
+    print(mH.H)
+    print(mH.deleteMin())
+    
+    mH.decreaseValue((12,3),(11,3))
+    mH.insert((14,6))
+    print(mH.H)
+    print(mH.deleteMin())
 
-    # print(mH.map)
-    # print(mH.size)
+    mH.insert((13,4))
+    print(mH.H)
+    print(mH.deleteMin())
+
+    mH.decreaseValue((13,4),(12,4))
+    mH.insert((13,9))
+    print(mH.H)
+    print(mH.deleteMin())
+
+    mH.insert((13,7))
+    mH.insert((21,8))
+    print(mH.H)
+    print(mH.deleteMin())

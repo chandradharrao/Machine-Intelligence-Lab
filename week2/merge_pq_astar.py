@@ -1,4 +1,4 @@
-import heapq
+import pq_obj as pq
 import queue
 
 '''****HANDLE EDGE CASES LIKE NO PATH,one path etc*****'''
@@ -24,22 +24,18 @@ def A_star_Traversal(cost, heuristic, start_point, goals):
     
     path = queue.LifoQueue()
 
-    open_list = []
-    heapq.heapify(open_list)
+    open_list = pq.MinHeap()
 
     close_list = [] #just store node number
-    heapq.heapify(close_list)
 
-    open_list.append((0+heuristic[start_point],start_point)) #starting node (f(n),node_#)
-    heapq.heapify(open_list)
+    open_list.insert((0+heuristic[start_point],start_point)) #starting node (f(n),node_#)
 
     parent = [-1]*len(heuristic) #stores the parent number
 
-    while open_list: #not empty
-        
+    while not open_list.is_empty(): #not empty
         print("************************")
-        print(f"Before popping {open_list}")
-        a_node = heapq.heappop(open_list)
+        print(f"Before popping {open_list.H}")
+        a_node = open_list.deleteMin()
         #print(a_node)
         print(f"Popped node is {a_node}")
         #print(f"Number of nodes in open list {len(open_list)}")
@@ -77,28 +73,26 @@ def A_star_Traversal(cost, heuristic, start_point, goals):
                 print(f"temp node is {temp}")
 
                 #see if present in open list
-                isPresent=False
-                for indx,open_node in enumerate(open_list):
-                    if open_node[1]==nei:
-                        #if present
-                        isPresent=True
-                        break
-                    
+                isPresent,open_node = open_list.isPresent_fetch(temp)
+                # print(f"isPresent {isPresent}")
+                # print(f"temp node after manipulation is {temp}")
+                print(f"Open node {open_node}")
+
                 if isPresent and dist+heuristic[nei]<open_node[0]: #if present and better,then update
-                    open_list[indx] = temp
+                    print(f"Before Updating temp {temp}")
+                    open_list.decreaseValue(open_node,temp)
                     print(f"Parent of {nei} is {a_node[1]}")
-                    parent[nei]=a_node[1] #update parent
+                    parent[nei]=a_node[1] #update parent array
                     print(f"Parent: {parent}")
-                    heapq.heapify(open_list)
                 #if present and not better,ignore
                     
                 if not isPresent:
                     added_neis+=1
-                    open_list.append(temp) #add it
+                    print(f"Before inserting temp {temp}")
+                    open_list.insert(temp) #add it
                     print(f"Parent of {nei} is {a_node[1]}")
-                    parent[nei]=a_node[1] #update parent
+                    parent[nei]=a_node[1] #update parent array
                     print(f"Parent: {parent}")
-                    heapq.heapify(open_list)
                     #print(f"Added {temp[1]}")
         #print(f"Added {added_neis} neighbours to open list")
 
