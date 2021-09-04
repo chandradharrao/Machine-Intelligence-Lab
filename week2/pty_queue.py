@@ -40,20 +40,31 @@ class MinHeap:
             
 
     def siftDown(self,i):
-        print("Called sift down")
+        if self.size==0: return
+
+        #print(f"Called sift down for indx {i}")
+        #print(f"Size of H {self.size} vs {len(self.H)}")
+        
         k=i
         v=self.H[k] #ele cached
         isHeap=False
         j=self.get_left_child_indx(i)
 
         while not isHeap and j<self.size:
+            #print(f"j->H[{j}] is {self.H[j]}")
+            #if j+1<self.size:
+                #print(f"j+1->H[{j+1}] is {self.H[j+1]}")
+            #print(f"v is {v}")
+
             if j+1<self.size and self.H[j+1]<self.H[j]: #if right node is smaller than left
                 j=j+1
+                
             if v<self.H[j]:  #if parent itself is smaller than both
                 isHeap=True
             else:
                 self.H[k]=self.H[j]
                 k=j
+                j=self.get_left_child_indx(k)
         self.H[k]=v
 
     def insert(self,ele):
@@ -73,7 +84,7 @@ class MinHeap:
         self.size-=1
         self.indx-=1
 
-        print(f"New H {self.H}")
+        #print(f"New H {self.H}")
         self.siftDown(0)
         return res
     
@@ -100,6 +111,6 @@ print(mH.H)
 sorted=[]
 while not mH.is_empty():
     x=mH.deleteMin()
-    print(x)
+    #print(x)
     sorted.append(x)
 print(sorted)
