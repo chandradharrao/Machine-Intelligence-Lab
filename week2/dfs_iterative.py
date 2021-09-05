@@ -16,7 +16,7 @@ def DFS_Traversal(cost, start_point, goals):
     Returns:
         path: path to goal state obtained from DFS(list of ints)
     """
-    if len(goal) ==0: return []
+    if len(goals) ==0: return []
     
     path=[]
     n=len(cost)

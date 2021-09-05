@@ -126,7 +126,7 @@ def cas1():
             print("Not allowed!!!")
             input()
 
-    heuristic = [0,10,8,5,7,3,6,5,3,1,0]
+    heuristic = [10,8,5,7,3,6,5,3,1,0]
     start = 1
     goals = [10]
 
@@ -148,7 +148,21 @@ def case2():
 
     start=1
     goals=[4]
-    heuristic=[0,0,0,0,0]
+    heuristic=[0,0,0,0,0,0]
+    res=A_star_Traversal(cost,heuristic,start,goals)
+    print(res)
+
+def case3():
+    cost = [[0, 0, 0, 0, 0, 0, 0], 
+             [0, 0, 5, 4,-1,-1,-1],  #a
+             [0, 5, 0, 1, 5,-1,-1],  #b
+             [0, 4, 1, 0, 8,10,-1],  #c
+             [0,-1, 5, 8, 0, 2, 6],  #d
+             [0,-1,-1,10, 2, 0, 5],  #e
+             [0,-1,-1,-1, 6, 5, 0]]  #z
+    heuristic = [0,11, 8, 8, 4, 2, 0]
+    start=1
+    goals=[6]
     res=A_star_Traversal(cost,heuristic,start,goals)
     print(res)
 

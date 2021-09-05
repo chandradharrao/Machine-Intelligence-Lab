@@ -38,7 +38,7 @@ def testcase(mymodule):
             print("Test Case 1 for A* Traversal PASSED")
         else:
             print("Test Case 1 for A* Traversal FAILED")
-    except exception as e:
+    except Exception as e:
         print("Test Case 1 for A* Traversal FAILED due to ",e)
 
 
@@ -47,7 +47,7 @@ def testcase(mymodule):
             print("Test Case 2 for DFS Traversal PASSED")
         else:
             print("Test Case 2 for DFS Traversal FAILED")
-    except exception as e:
+    except Exception as e:
         print("Test Case 2 for DFS Traversal FAILED due to ",e)         
 
 testcase(mymodule)
