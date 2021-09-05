@@ -20,6 +20,10 @@ def A_star_Traversal(cost, heuristic, start_point, goals):
     Returns:
         path: path to goal state obtained from A*(list of ints)
     """
+    n=len(heuristic)
+
+    if start_point not in range(0,n): return []
+
     if len(goals) ==0: return []
     
     path = queue.LifoQueue()
@@ -30,7 +34,7 @@ def A_star_Traversal(cost, heuristic, start_point, goals):
 
     open_list.insert((0+heuristic[start_point],start_point)) #starting node (f(n),node_#)
 
-    parent = [-1]*len(heuristic) #stores the parent number
+    parent = [-1]*n #stores the parent number
 
     while not open_list.is_empty(): #not empty
         print("************************")
@@ -47,6 +51,8 @@ def A_star_Traversal(cost, heuristic, start_point, goals):
         if a_node[1] in goals:
             print(f"Goal node is {a_node[1]}")
             print(f"Parent: {parent}")
+
+            print(f"Mappings {open_list.map}")
             find(parent,a_node[1],path)
 
             temp=[]
@@ -78,7 +84,7 @@ def A_star_Traversal(cost, heuristic, start_point, goals):
                 # print(f"temp node after manipulation is {temp}")
                 print(f"Open node {open_node}")
 
-                if isPresent and dist+heuristic[nei]<open_node[0]: #if present and better,then update
+                if isPresent and (dist+heuristic[nei])<open_node[0]: #if present and better,then update
                     print(f"Before Updating temp {temp}")
                     open_list.decreaseValue(open_node,temp)
                     print(f"Parent of {nei} is {a_node[1]}")
@@ -115,4 +121,9 @@ if __name__ == "__main__":
     start = 1
     goals = [6, 7, 10]
 
-    print(A_star_Traversal(cost,heuristic,start,goals))
+    res=A_star_Traversal(cost,heuristic,start,goals)
+    print(res)
+    if res==[1,5,4,7]:
+        print("PASSED")
+    else:
+        print("FAIL")
