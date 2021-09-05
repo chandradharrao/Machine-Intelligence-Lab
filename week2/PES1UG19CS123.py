@@ -249,10 +249,14 @@ def DFS_Traversal(cost, start_point, goals):
     Returns:
         path: path to goal state obtained from DFS(list of ints)
     """
-    if len(goals) ==0: return []
+    n_goals = len(goals)
+    if n_goals ==0: return []
+    n=len(cost)
+    if n == 0: return []
+
+    if start_point<=0 or start_point>n_goals: return []
     
     path=[]
-    n=len(cost)
     parent = [-1]*n
     visited = [False]*n
     stk = []
