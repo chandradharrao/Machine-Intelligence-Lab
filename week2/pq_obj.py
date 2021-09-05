@@ -83,11 +83,12 @@ class MinHeap: #made for A* and Dijkstras Algo
         if self.size==0: return
 
         res=self.H[0]
+        #print(f"Map {self.map}")
         self.H[0] = self.H[self.size-1]
         self.map[f"{self.H[0][1]}"]=0
         
         self.H.pop()
-        self.map[f"{res[1]}"]=None
+        del self.map[f"{res[1]}"]
         self.size-=1
         self.indx-=1
 
@@ -99,7 +100,6 @@ class MinHeap: #made for A* and Dijkstras Algo
             i=self.map[f"{ele[1]}"]
             self.H[i]=newVal
             self.siftUp(i) #since the new ele must be LT existing ele,move up the minPQ
-            self.map[f"{ele[1]}"]=None #instead of deleting prev mapping,just make it none
         else: return
 
     def is_empty(self):
