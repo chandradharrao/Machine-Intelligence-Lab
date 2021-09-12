@@ -13,6 +13,7 @@ from pprint import pprint
 like log 0
 p or n == 0
 same value for information gain what to do?
+no last column itself or len(df[last_col])==0
 '''
 
 '''
@@ -34,7 +35,8 @@ def get_entropy(counts,n):
     entropy=0
     for _,v in counts.items():
         pi=v/n
-        entropy+=(pi)*np.log2(pi)
+        if v!=0: #calc log for non zero v
+            entropy+=(pi)*np.log2(pi)
     return entropy
 
 
@@ -45,10 +47,10 @@ def get_entropy_of_dataset(df):
     last_col = df.columns.values[-1]
     # print(f"Last col name {last_col}")
     # u_attrs = df[last_col].unique()
-    counts = {}
+    counts = {} #{yes:2,no:3,maybe:0}
     # print(f"Attrs of last col {u_attrs}")
     n=len(df[last_col])
-    # print(f"Total #attrs {n}")
+    # print(f"Total #rows {n}")
     # for u_attr in u_attrs:
     #     count=0
     #     for _ in df.loc[df[last_col]==u_attr]: 
@@ -67,7 +69,7 @@ def get_entropy_of_dataset(df):
 '''Return avg_info of the attribute provided as parameter'''
 # input:pandas_dataframe,str   {i.e the column name ,ex: Temperature in the Play tennis dataset}
 # output:int/float
-def get_avg_info_of_attribute(df, attribute):
+def get_avg_info_of_attribute(df, attribute): #attribute:weather->sunny,rainy,overcast
     last_col = df.columns.values[-1]
     #print(f"Last col name {last_col}")
 
