@@ -2,18 +2,15 @@
 Assume df is a pandas dataframe object of the dataset given
 '''
 
-from os import name
 import numpy as np
 import pandas as pd
-import random
-from pprint import pprint
 
 '''
 ###### Edge cases ########
-like log 0
+like log 0 [DONE]
 p or n == 0
 same value for information gain what to do?
-no last column itself or len(df[last_col])==0
+no last column itself or len(df[last_col])==0 [Q=Presence guaranteed]
 '''
 
 '''
@@ -129,24 +126,24 @@ def get_selected_attribute(df):
     return (sel_attr,max_info_gain['name'])
 
 
-if __name__=="__main__":
-    outlook = 'overcast,overcast,overcast,overcast,rainy,rainy,rainy,rainy,rainy,sunny,sunny,sunny,sunny,sunny'.split(
-        ',')
-    temp = 'hot,cool,mild,hot,mild,cool,cool,mild,mild,hot,hot,mild,cool,mild'.split(
-        ',')
-    humidity = 'high,normal,high,normal,high,normal,normal,normal,high,high,high,high,normal,normal'.split(
-        ',')
-    windy = 'FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,TRUE'.split(
-        ',')
-    play = 'yes,yes,yes,yes,yes,yes,no,yes,no,no,no,no,yes,yes'.split(',')
-    dataset = {'outlook': outlook, 'temp': temp,
-                'humidity': humidity, 'windy': windy, 'play': play}
-    df = pd.DataFrame(dataset, columns=[
-                        'outlook', 'temp', 'humidity', 'windy', 'play'])
+# if __name__=="__main__":
+#     outlook = 'overcast,overcast,overcast,overcast,rainy,rainy,rainy,rainy,rainy,sunny,sunny,sunny,sunny,sunny'.split(
+#         ',')
+#     temp = 'hot,cool,mild,hot,mild,cool,cool,mild,mild,hot,hot,mild,cool,mild'.split(
+#         ',')
+#     humidity = 'high,normal,high,normal,high,normal,normal,normal,high,high,high,high,normal,normal'.split(
+#         ',')
+#     windy = 'FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,TRUE'.split(
+#         ',')
+#     play = 'yes,yes,yes,yes,yes,yes,no,yes,no,no,no,no,yes,yes'.split(',')
+#     dataset = {'outlook': outlook, 'temp': temp,
+#                 'humidity': humidity, 'windy': windy, 'play': play}
+#     df = pd.DataFrame(dataset, columns=[
+#                         'outlook', 'temp', 'humidity', 'windy', 'play'])
 
-    #(get_avg_info_of_attribute(df, 'outlook'))
-    columns = ['outlook', 'temp', 'humidity', 'windy', 'play']
-    ans = get_selected_attribute(df)
-    dictionary = ans[0]
-    flag = (dictionary['outlook'] >= 0.244 and dictionary['outlook'] <= 0.248) and (dictionary['temp'] >= 0.0292 and dictionary['temp'] <= 0.0296) and (
-        dictionary['humidity'] >= 0.150 and dictionary['humidity'] <= 0.154) and (dictionary['windy'] >= 0.046 and dictionary['windy'] <= 0.05) and (ans[1] == 'outlook')
+#     #(get_avg_info_of_attribute(df, 'outlook'))
+#     columns = ['outlook', 'temp', 'humidity', 'windy', 'play']
+#     ans = get_selected_attribute(df)
+#     dictionary = ans[0]
+#     flag = (dictionary['outlook'] >= 0.244 and dictionary['outlook'] <= 0.248) and (dictionary['temp'] >= 0.0292 and dictionary['temp'] <= 0.0296) and (
+#         dictionary['humidity'] >= 0.150 and dictionary['humidity'] <= 0.154) and (dictionary['windy'] >= 0.046 and dictionary['windy'] <= 0.05) and (ans[1] == 'outlook')
