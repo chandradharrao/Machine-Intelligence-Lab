@@ -1,6 +1,7 @@
-from _typeshed import Self
 import numpy as np
 import math
+
+from pandas.core.dtypes.missing import isna
 
 class KNN:
     """
@@ -38,7 +39,7 @@ class KNN:
         return self
     
     # between two vectors of D dim each
-    def minkowski_dist(self,vec1,vec2,one_by_p): 
+    def minkowski_dist(self,vec1,vec2): 
         '''
         vec1 and vec2 are arrays with D elements(where D= #of dim)
         check if len(vec1)!=len(vec2)
@@ -46,11 +47,13 @@ class KNN:
         one_by_p is 1/0
         '''
         n=len(vec1)
-        res=0
+        res=0.0
 
         for i in range(0,n):
-            res+=math.pow(abs(vec1[i],vec2[i]),self.p)
-        return math.pow(res,one_by_p)
+            #print(f"Abs of {vec1[i]} and {vec2[i]} is {abs(vec1[i]-vec2[i])}")
+            #print(f"Power of above abs is {math.pow(abs(vec1[i]-vec2[i]),self.p)}")
+            res+=math.pow(abs(vec1[i]-vec2[i]),self.p)
+        return math.pow(res,(1/self.p))
 
     
     """
@@ -65,38 +68,42 @@ class KNN:
         '''
         Edge case:
         p=0
-        speed up with numpy arrays?
+        speed up with numpy arrays and numpy functions
+        try using np.array_equal for equality test
         '''
-        one_by_p= 1/float(self.p)
         dists=[]
         
         for c in x: #for each of the query_point in list of query_points
             temp=[]
             for instance in self.data: #calc dist b/w data points
-                temp.append(self.minkowski_dist(c,instance,one_by_p))
-            dists.append(temp)
-        return dists
 
+                #ignore the query point if it is present in the dataset
+                #print(f"Query point with D dims {c}")
+                #print(f"The instace is {instance}")
+                #print(f"Types {type(c)} vs {type(instance)}")
+                n=len(c)
+                m=len(instance)
+                if n==m:
+                    same=True
+                    for i in range(n):
+                        if c[i]!=instance[i]:
+                            same=False
+                    if same: continue
+
+                temp.append(self.minkowski_dist(c,instance))
+            dists.append(temp)
+        # print("Distances of every query point with dataset is ")
+        
+        # for d in dists:
+        #     print(d)
+
+        return dists
 
     def euclids_dist(self,vec1,vec2):
         dists=0
         for i in range(len(vec1)):
             dists+=math.sqrt(math.pow(vec1[i],2)+math.pow(vec2[i],2))
         return dists
-        
-    def calc_nn(self,c):
-        dists=[]
-        indxs=[]
-
-        for i,instance in enumerate(self.data):
-            dists.append(self.euclids_dist(c,instance))
-            indxs.append(i)
-
-        #sort both the arrays
-        dists,indxs=zip(*sorted(zip(dists,indxs)))
-
-        #the 0th index would be distance between c and itself
-        return dists[1:self.k_neigh+1],indxs[1:self.k_neigh+1]
 
     """
         Find K nearest neighbours of each point in train dataset x 
@@ -116,32 +123,44 @@ class KNN:
             Note that each row of both neigh_dists and idx_of_neigh must be SORTED in increasing order of distance
     """
     def k_neighbours(self, x):
-        kNN_dist_for_every_c=[]
-        knn_indx_for_every_c=[]
+        #distance between every query point c in x to the entire dataset 
+        #distances is a NxM matrix
+        distances=self.find_distance(x) 
+        knn_indxs=[]
+        knn_dists=[]
 
-        #go through every query point
-        for c in x:
-            one,two=self.calc_nn(c)
-            #one-> list of dist of c from k nearest neighbours-> k dim vec
-            #two-> list of indxs of the knns ->k dim vec
+        #return the k nearest neighbouring nodes of every query point
+        for c_dist in distances:
+            #sort the distances along with the index
+            indxs=np.argsort(c_dist)
 
-            kNN_dist_for_every_c.append(one)
-            knn_indx_for_every_c.append(two)
+            #0th indx will be distance of c to itself
+            knn_indxs.append(indxs[0:self.k_neigh])
+            knn_dists.append([c_dist[i] for i in indxs][0:self.k_neigh])
 
-        return kNN_dist_for_every_c,knn_indx_for_every_c
+        #print(f"The sorted k nearest neighbours for each query point are at distances")
+        # for d in knn_dists:
+        #     print(f"{d}")
 
-    def predict(self, x):
-        """
+        return knn_dists,knn_indxs
+
+    """
         Predict the target value of the inputs.
         Args:
             x: N x D Matrix( N inputs with D attributes each)(float)
         Returns:
             pred: Vector of length N (Predicted target value for each input)(int)
-        """
+    """
+    def predict(self, x):
         #k_nns is an list of k nearest neighbours of c
         #if weighted knn,then out of the selected k nearest neighbours,
         #add (1/distance) of c from pos class points in k neis and add (1/dist) of c from neg class points in neis
         #return the class with highest sum
+
+        '''
+        Edge cases:
+        Try finding mode using numpy
+        '''
         
         k_nei_dists,k_nei_indxs = self.k_neighbours(x) #n knn_indx and knn_dists 
         pred=[]
@@ -172,14 +191,21 @@ class KNN:
                 mode={}
 
                 for i in k_nei_indx:
-                    mode[f"{self.target[i]}"]+=1
-
-                for k,v in mode:
+                    k=f"{self.target[i]}"
+                    if k not in mode:
+                        mode[k]=1
+                    else:
+                        mode[k]+=1
+                #print(f"Mode {mode}")
+                for k,v in mode.items():
                     k=int(k)
                     if v>max_mode or v==max_mode and k<max_label:
                         max_label=k
                         max_mode=v
                 pred.append(max_label)
+
+                #print(f"Final mode {mode}")
+        #print(f"Pred {pred}")
         return pred
                 
 
@@ -203,5 +229,36 @@ class KNN:
 
 
 if __name__=="__main__":
-    knn_test = KNN()
+    data=[
+        [100,120,12,6],
+        [110,130,14,5],
+        [120,110,11,7],
+        [100,140,13,7],
+        [115,140,11,6]
+    ]
+
+    target=[
+        0,
+        1,
+        1,
+        0,
+        1
+    ]
+    target=np.asarray(target)
+    data=np.asarray(data)
+
+    query_points= [
+        [100,135,12,8]
+    ]
+    query_targets=[
+        0
+    ]
+    query_points=np.asarray(query_points)
+    query_targets=np.array(query_targets)
+
+    knn = KNN(3,False,2)
+    knn.fit(data,target)
+    acc= knn.evaluate(query_points,query_targets)
+    print(f"The accuracy is {acc*100}%")
+
 
