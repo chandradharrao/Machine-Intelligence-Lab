@@ -159,7 +159,7 @@ class KNN:
 
         '''
         Edge cases:
-        Try finding mode using numpy
+        Try finding mean using numpy 
         '''
         
         k_nei_dists,k_nei_indxs = self.k_neighbours(x) #n knn_indx and knn_dists 
@@ -169,7 +169,7 @@ class KNN:
             if self.weighted:
                 cumu_wts={}
                 for a_dist,a_indx in zip(k_nei_dist,k_nei_indx):
-                    wt=1/float(a_dist)
+                    wt=1/a_dist
                     cumu_wts[f"{self.target[a_indx]}"]+=wt
                 
                 #max weight ie inv of distance
@@ -183,29 +183,17 @@ class KNN:
                 pred.append(max_wt_node)
                 
             else:
-                #go through the k neighbours and which class they belong to 
-                #return the class with highest mode
-                #in case of conflict lexi
-                max_label=float("-inf")      
-                max_mode=float("-inf")
-                mode={}
-
+                #go through the k neighbours and calc the target mean since only continous variables
+                mean=0
+                n=0
                 for i in k_nei_indx:
-                    k=f"{self.target[i]}"
-                    if k not in mode:
-                        mode[k]=1
-                    else:
-                        mode[k]+=1
-                #print(f"Mode {mode}")
-                for k,v in mode.items():
-                    k=int(k)
-                    if v>max_mode or v==max_mode and k<max_label:
-                        max_label=k
-                        max_mode=v
-                pred.append(max_label)
+                    mean+=self.target[i]
+                    n+=1
+                mean=mean/n
+                pred.append(int(mean))
 
-                #print(f"Final mode {mode}")
-        #print(f"Pred {pred}")
+                print(f"Mean {mean}")
+        print(f"Pred {pred}")
         return pred
                 
 
@@ -225,40 +213,77 @@ class KNN:
         for i in range(n):
             if preds[i]==y[i]:
                 correct+=1
-        return correct/float(n)
+        return correct/n
 
 
 if __name__=="__main__":
-    data=[
-        [100,120,12,6],
-        [110,130,14,5],
-        [120,110,11,7],
-        [100,140,13,7],
-        [115,140,11,6]
+    data1=[
+        [5,45],
+        [5.11,26],
+        [5.6,30],
+        [5.9,34],
+        [4.8,40],
+        [5.8,36],
+        [5.3,19],
+        [5.8,28],
+        [5.5,23],
+        [5.6,32],
     ]
+    data1=np.asarray(data1)
 
-    target=[
-        0,
-        1,
-        1,
-        0,
-        1
+    target1=[
+        77,
+        47,
+        55,
+        59,
+        72,
+        60,
+        40,
+        60,
+        45,
+        58
     ]
-    target=np.asarray(target)
-    data=np.asarray(data)
+    target1=np.asarray(target1)
+    query1=[
+        [5.5,38]
+    ]
+    query_target1=[
+        63.666
+    ]
+    query_target1=np.asarray(query_target1)
+    query_target1=query_target1.astype(np.int64)
+    query1=np.asarray(query1)
 
-    query_points= [
-        [100,135,12,8]
-    ]
-    query_targets=[
-        0
-    ]
-    query_points=np.asarray(query_points)
-    query_targets=np.array(query_targets)
+    # data=[
+    #     [100,120,12,6],
+    #     [110,130,14,5],
+    #     [120,110,11,7],
+    #     [100,140,13,7],
+    #     [115,140,11,6]
+    # ]
+    # target=[
+    #     0,
+    #     1,
+    #     1,
+    #     0,
+    #     1
+    # ]
+    # target=np.asarray(target)
+    # data=np.asarray(data)
+
+    # query_points= [
+    #     [100,135,12,8]
+    # ]
+    # query_targets=[
+    #     0
+    # ]
+    # query_points=np.asarray(query_points)
+    # query_targets=np.array(query_targets)
+    
 
     knn = KNN(3,False,2)
-    knn.fit(data,target)
-    acc= knn.evaluate(query_points,query_targets)
+    knn.fit(data1,target1)
+    acc= knn.evaluate(query1,query_target1)
     print(f"The accuracy is {acc*100}%")
 
 
