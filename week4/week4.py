@@ -20,7 +20,6 @@ class KNN:
         self.k_neigh = k_neigh #num of neighbours
         self.p = p #used in minkowski dist calc
 
-
     def fit(self, data, target): #lazy algo
         """
         Fit the model to the training dataset.
@@ -44,6 +43,8 @@ class KNN:
         len(vec1)==0 || len(vec2)==0
         one_by_p is 1/0
         '''
+        if self.p==0: return float("inf")
+
         n=len(vec1)
         res=0.0
 
@@ -163,7 +164,9 @@ class KNN:
                 #print(f"Cumu wts {cumu_wts}")
                 for k,v in cumu_wts.items():
                     k=int(k)
+                    #print(f"Comapring target {k} with {max_wt_node}")
                     if v>max_wt or v==max_wt and k<max_wt_node:
+                        #print(f"Winner is {k}")
                         max_wt=v
                         max_wt_node=k
                 pred.append(max_wt_node)
@@ -184,7 +187,9 @@ class KNN:
                 #print(f"Mode {mode}")
                 for k,v in mode.items():
                     k=int(k)
+                    #print(f"Comapring target {k} with {max_label}")
                     if v>max_mode or v==max_mode and k<max_label:
+                        #print(f"Winner is {k}")
                         max_label=k
                         max_mode=v
                 pred.append(max_label)
@@ -207,6 +212,8 @@ class KNN:
         preds=self.predict(x)
         correct=0
         n=len(preds)
+        if n==0: return 0
+
         for i in range(n):
             if preds[i]==y[i]:
                 correct+=1
@@ -214,8 +221,74 @@ class KNN:
         return (correct/n)*100
 
 
+if __name__ == '__main__':
+    # model = KNN(k_neigh=4)
+    # data = np.array([[0, 0, 1], 
+    #                 [0, 2, 1], 
+    #                 [2, 2, 2], 
+    #                 [2, 0, 2]])
+    # X_train = data[:, :-1]
+    # y_train = data[:, -1]
+    # #X_test = data[:, :-1]
+    # y_test = data[:, -1].astype(np.int64)
+    # X_test = [[1, 1]]
+    # model.fit(X_train, y_train)
+    # print("Point =", X_test)
+    # print("Neighbours =", model.k_neighbours(X_test))
+    # print("Prediction   =", model.predict(X_test))
+    # print("Accuracy =", model.evaluate(X_test, y_test))
+    # print("Ground Truth =", y_test)
+
+#     data = np.array([[0.68043616, 0.39113473, 0.1165562 , 0.70722573, 0],
+#        [0.67329238, 0.69782966, 0.73278321, 0.78787406, 0],
+#        [0.56134898, 0.25358895, 0.10497708, 0.05846073, 1],
+#        [0.6515744 , 0.85627836, 0.44305142, 0.53280211, 0],
+#        [0.47014548, 0.18108572, 0.3235044 , 0.45490616, 0],
+#        [0.33544621, 0.51322212, 0.98769111, 0.53091437, 0],
+#        [0.4577167 , 0.80579291, 0.19350921, 0.46502849, 0],
+#        [0.25709202, 0.06937377, 0.92718944, 0.54662592, 1],
+#        [0.07637632, 0.3176806 , 0.74102328, 0.32849423, 1],
+#        [0.2334587 , 0.67725537, 0.4323325 , 0.38766629, 0]])
+#     X_train = data[:, :-1]
+#     y_train = data[:, -1]
+#     X_test = data[:, :-1]
+#     y_test = data[:, -1].astype(np.int64)
+#     model = KNN(k_neigh = 3, p = 2, weighted=True)
+#     model.fit(X_train, y_train)
+#     print("Point =", X_test)
+#     print("Neighbours =", model.k_neighbours(X_test))
+#     print("Prediction   =", model.predict(X_test))
+#     print("Ground Truth =", y_test)
+
+
+
 
 # if __name__=="__main__":
+    data1=[
+        [11,14],
+        [11,14]
+    ]
+    data1=np.asarray(data1)
+    target1=[
+        2,
+        1
+    ]
+    target1=np.asarray(target1)
+    query1=[
+        [5,4]
+    ]
+    query1_target=[
+        1
+    ]
+    query1=np.asarray(query1)
+    query1_target=np.asarray(query1_target)
+
+    knn = KNN(3,True,2)
+    knn.fit(data1,target1)
+    acc= knn.evaluate(query1,query1_target)
+    print(f"The accuracy is {acc}%")
+
+
     #test_case2()
     # data1=[
     #     [5,45],
