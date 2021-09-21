@@ -221,7 +221,7 @@ class KNN:
         return (correct/n)*100
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
     # model = KNN(k_neigh=4)
     # data = np.array([[0, 0, 1], 
     #                 [0, 2, 1], 
@@ -264,29 +264,29 @@ if __name__ == '__main__':
 
 
 # if __name__=="__main__":
-    data1=[
-        [11,14],
-        [11,14]
-    ]
-    data1=np.asarray(data1)
-    target1=[
-        2,
-        1
-    ]
-    target1=np.asarray(target1)
-    query1=[
-        [5,4]
-    ]
-    query1_target=[
-        1
-    ]
-    query1=np.asarray(query1)
-    query1_target=np.asarray(query1_target)
+    # data1=[
+    #     [11,14],
+    #     [11,14]
+    # ]
+    # data1=np.asarray(data1)
+    # target1=[
+    #     2,
+    #     1
+    # ]
+    # target1=np.asarray(target1)
+    # query1=[
+    #     [5,4]
+    # ]
+    # query1_target=[
+    #     1
+    # ]
+    # query1=np.asarray(query1)
+    # query1_target=np.asarray(query1_target)
 
-    knn = KNN(3,True,2)
-    knn.fit(data1,target1)
-    acc= knn.evaluate(query1,query1_target)
-    print(f"The accuracy is {acc}%")
+    # knn = KNN(3,True,2)
+    # knn.fit(data1,target1)
+    # acc= knn.evaluate(query1,query1_target)
+    # print(f"The accuracy is {acc}%")
 
 
     #test_case2()
