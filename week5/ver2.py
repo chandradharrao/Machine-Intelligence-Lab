@@ -104,15 +104,15 @@ class Tensor:
             gradients=np.ones_like(self.arr)
 
         #local_grad*incoming_grad
-        print(bcolors.WARNING + "Trying to compare operands.." + bcolors.ENDC)
-        if self.history[1]==self.history[2]:
-            #same operands
-            print(bcolors.HEADER + "Recived same operands" + bcolors.ENDC)
-            op = np.matmul(gradients,np.transpose(self.history[1].arr))+np.matmul(np.transpose(self.history[2].arr),gradients)
-            pprint(op)
-            return (op,op)
-        else:
-            print(bcolors.WARNING + "Not same operands!" + bcolors.ENDC)
+        # print(bcolors.WARNING + "Trying to compare operands.." + bcolors.ENDC)
+        # if self.history[1]==self.history[2]:
+        #     #same operands
+        #     print(bcolors.HEADER + "Recived same operands" + bcolors.ENDC)
+        #     op = np.matmul(gradients,np.transpose(self.history[1].arr))+np.matmul(np.transpose(self.history[2].arr),gradients)
+        #     pprint(op)
+        #     return (op,op)
+        # else:
+        #     print(bcolors.WARNING + "Not same operands!" + bcolors.ENDC)
 
         op1_grad = np.matmul(gradients,np.transpose(self.history[2].arr))
         op2_grad = np.matmul(np.transpose(self.history[1].arr),gradients)

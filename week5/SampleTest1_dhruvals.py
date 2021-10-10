@@ -144,7 +144,7 @@ def test_case():
         b.zero_grad()
 
         c = a+b
-        mul = c@b
+        mul = b@c
         print("\033[92m*************************\033[0m")
         mul.backward()
 
@@ -216,16 +216,16 @@ def test_case():
     try:
         a = Tensor(np.array([[56., 58., 1.],[1., 0., 5.],[6., 64., 65]]))
         
-#         a.zero_grad()
+        a.zero_grad()
 
-#         mul = a @ a @ a
+        mul = a @ a @ a
         
-#         mul.backward()
+        mul.backward()
         
 
-#         np.testing.assert_array_almost_equal(a.grad, np.array([[18244.,  5244., 22430.,],
-#  [29151.,  9720., 34517.,],
-#  [20376.,  6504., 24722.,]]), decimal=2)
+        np.testing.assert_array_almost_equal(a.grad, np.array([[18244.,  5244., 22430.,],
+ [29151.,  9720., 34517.,],
+ [20376.,  6504., 24722.,]]), decimal=2)
         
         a.zero_grad()
         add = a + a + a + a
@@ -233,6 +233,7 @@ def test_case():
         np.testing.assert_array_almost_equal(a.grad, np.array([[4., 4., 4.,],
         [4., 4., 4.,],
         [4., 4., 4.,]]), decimal=2)
+
         print("Test Case 14 \033[92mPASSED\033[0m")
     except Exception as e:
         print("Test Case 14 \033[91mFAILED\033[0m", e)

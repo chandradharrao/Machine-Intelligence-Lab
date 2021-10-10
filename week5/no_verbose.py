@@ -70,30 +70,29 @@ class Tensor:
             #print(bcolors.FAIL + "add_grad recieved null gradients" + bcolors.ENDC)
             gradients=np.ones_like(self.arr)
         
-        try:
-            #print(bcolors.UNDERLINE + "Trying to compare" + bcolors.ENDC)
-            #print(bcolors.OKCYAN+"-------"+bcolors.ENDC)
-            #p#print(self.history[1].arr)
-            #p#print(self.history[2].arr)
-            #print(bcolors.OKCYAN+"-------"+bcolors.ENDC)
-            #check if arrays are same,if not assert will fail and constrol will go to the except block
-            np.testing.assert_array_almost_equal(self.history[1].arr,self.history[2].arr)
+        # if self.history[1]==self.history[2]:
+        #     #print(bcolors.UNDERLINE + "Trying to compare" + bcolors.ENDC)
+        #     #print(bcolors.OKCYAN+"-------"+bcolors.ENDC)
+        #     #pprint(self.history[1].arr)
+        #     #pprint(self.history[2].arr)
+        #     #print(bcolors.OKCYAN+"-------"+bcolors.ENDC)
+        #     #check if arrays are same,if not assert will fail and constrol will go to the except block
+        #     np.testing.assert_array_almost_equal(self.history[1].arr,self.history[2].arr)
 
-            #if successfully tested
-            #print(bcolors.HEADER + "Recived same operands" + bcolors.ENDC)
+        #     #if successfully tested
+        #     #print(bcolors.HEADER + "Recived same operands" + bcolors.ENDC)
 
-            #d/da (a+a) = 2 is the local gradient
-            #incoming gradient = gradients
-            #outgoing gradient = local_grad*inc_grad
-            op1_grad=2*gradients
-            op2_grad = 2*gradients
-            #print(bcolors.OKCYAN + "The grads of same input are " + bcolors.ENDC)
-            #p#print(op1_grad)
-            #p#print(op2_grad)
-            return (op1_grad,op2_grad)
-        except:
-            #arrays not equal,then continue as is
-            pass
+        #     #d/da (a+a) = 2 is the local gradient
+        #     #incoming gradient = gradients
+        #     #outgoing gradient = local_grad*inc_grad
+        #     op1_grad=2*gradients
+        #     op2_grad = 2*gradients
+        #     #print(bcolors.OKCYAN + "The grads of same input are " + bcolors.ENDC)
+        #     #pprint(op1_grad)
+        #     #pprint(op2_grad)
+        #     return (op1_grad,op2_grad)
+        # else:
+        #     #print(bcolors.WARNING + "Not same operands!" + bcolors.ENDC)
             
         op1_grad = gradients
         op2_grad = gradients
@@ -105,19 +104,15 @@ class Tensor:
             gradients=np.ones_like(self.arr)
 
         #local_grad*incoming_grad
-        #print(bcolors.WARNING + "Trying to compare operands.." + bcolors.ENDC)
-        try:
-            np.testing.assert_array_almost_equal(self.history[1].arr,self.history[2].arr)
-            #if successful
-            #print(bcolors.HEADER + "Recived same operands" + bcolors.ENDC)
-            op = np.matmul(gradients,np.transpose(self.history[1].arr))+np.matmul(np.transpose(self.history[2].arr),gradients)
-            #p#print(op)
-            return (op,op)
-        except Exception as e:
-            #if arrays not equal then continue
-            #print(e)
-            pass
-        #print(bcolors.WARNING + "Not same operands!" + bcolors.ENDC)
+        # #print(bcolors.WARNING + "Trying to compare operands.." + bcolors.ENDC)
+        # if self.history[1]==self.history[2]:
+        #     #same operands
+        #     #print(bcolors.HEADER + "Recived same operands" + bcolors.ENDC)
+        #     op = np.matmul(gradients,np.transpose(self.history[1].arr))+np.matmul(np.transpose(self.history[2].arr),gradients)
+        #     #pprint(op)
+        #     return (op,op)
+        # else:
+        #     #print(bcolors.WARNING + "Not same operands!" + bcolors.ENDC)
 
         op1_grad = np.matmul(gradients,np.transpose(self.history[2].arr))
         op2_grad = np.matmul(np.transpose(self.history[1].arr),gradients)
@@ -125,20 +120,19 @@ class Tensor:
 
     def backward(self, gradients=None): #incoming upstream grads 
 
-        #print("*******BACKWARDS CALL***********")
+        #print("BACKWARDS CALL on Node:")
+        ##pprint(self.arr)
         #print(f"Operation is {self.history[0]}")
-        try:
-            #print(f"Store grad? {self.history[1].requires_grad or self.history[2].requires_grad}")
-            #print("-----------------")
-            #print("Input Tensors")
-            #p#print(self.history[1].arr)
-            #p#print(self.history[2].arr)
-            #print("-----------------")
-            pass
-        except Exception as e: 
-            #print("Leaf node doesnt have history data struct!!")
-            #print(bcolors.WARNING + f"{e}" + bcolors.ENDC)
-            pass
+        # try:
+        #     #print(f"Store grad? {self.history[1].requires_grad or self.history[2].requires_grad}")
+        #     #print("-----------------")
+        #     #print(f"Input Tensors:")
+        #     #pprint(self.history[1].arr)
+        #     #pprint(self.history[2].arr)
+        #     #print("-----------------")
+        # except Exception as e: 
+        #     #print("Leaf node doesnt have history data struct!!")
+        #     #print(bcolors.WARNING + f"{e}" + bcolors.ENDC)
 
         #mathematical operation on the tensors
         operation=self.history[0]
@@ -152,24 +146,27 @@ class Tensor:
                 grad_res = self.grad_add(gradients)
 
             #print("----------------")
-            #print(bcolors.OKCYAN+"Result of grad operation "+bcolors.ENDC)
-            #p#print(grad_res)
+            #print(bcolors.OKCYAN+"Downstream:"+bcolors.ENDC)
+            ##pprint(grad_res[0]) 
+            #print(",")
+            ##pprint(grad_res[1])
             #print("----------------")
 
             for i,inpt in enumerate([self.history[1],self.history[2]]):
-                #p#print("Children:")
-                #p#print(inpt.arr)
+                #children
+                ##pprint(f"history[{i}]:")
+                ##pprint(inpt.arr)
                 #call grad on children
                 inpt.backward(grad_res[i])
-        else:
-            #print("Setting Leaf node grad")
+        else: #leaf node
+            #print("Setting grad of Leaf...")
             if self.requires_grad:
                 #leaf node,store res
-                self.grad = gradients
+                self.grad += gradients
             else:
                 self.zero_grad()
             #print(bcolors.OKCYAN+"leaf node grad is "+bcolors.ENDC)
-            #p#print(self.grad)
+            ##pprint(self.grad)
 
 
 class bcolors:
@@ -193,9 +190,9 @@ def test1():
     sans.backward()
     
     #print(bcolors.OKCYAN+"Resultant grad value:" + bcolors.ENDC)
-    #p#print(a.grad)
+    ##pprint(a.grad)
     #print(bcolors.OKGREEN + "Ground truth" + bcolors.ENDC)
-    #p#print(sgrad)
+    ##pprint(sgrad)
 
     try:
         #np.testing doesnt return true or false
@@ -216,9 +213,9 @@ def test2():
     sans.backward()
     
     #print(bcolors.OKCYAN+"Resultant grad value:" + bcolors.ENDC)
-    #p#print(a.grad)
+    #pprint(a.grad)
     # #print(bcolors.OKGREEN + "Ground truth" + bcolors.ENDC)
-    # #p#print(sgrad)
+    # #pprint(sgrad)
 
     try:
         np.testing.assert_array_almost_equal(a.grad, sgrad, decimal=2)
@@ -238,9 +235,9 @@ def test3():
     sans.backward()
     
     #print(bcolors.OKCYAN+"Resultant grad value:" + bcolors.ENDC)
-    #p#print(a.grad)
+    #pprint(a.grad)
     #print(bcolors.OKGREEN + "Ground truth" + bcolors.ENDC)
-    #p#print(sgrad)
+    #pprint(sgrad)
 
     try:
         np.testing.assert_array_almost_equal(a.grad, sgrad, decimal=2)
@@ -260,9 +257,9 @@ def test4():
     sans.backward()
     
     #print(bcolors.OKCYAN+"Resultant grad value:" + bcolors.ENDC)
-    #p#print(a.grad)
+    #pprint(a.grad)
     #print(bcolors.OKGREEN + "Ground truth" + bcolors.ENDC)
-    #p#print(sgrad)
+    #pprint(sgrad)
 
     try:
         np.testing.assert_array_almost_equal(a.grad, sgrad, decimal=2)
@@ -284,9 +281,9 @@ def test5():
     sans.backward()
     
     #print(bcolors.OKCYAN+"Resultant grad value:" + bcolors.ENDC)
-    #p#print(a.grad)
+    ##pprint(a.grad)
     #print(bcolors.OKGREEN + "Ground truth" + bcolors.ENDC)
-    #p#print(sgrad)
+    ##pprint(sgrad)
 
     try:
         np.testing.assert_array_almost_equal(a.grad, sgrad, decimal=2)
@@ -305,9 +302,9 @@ def test6():
     sans.backward()
     
     #print(bcolors.OKCYAN+"Resultant grad value:" + bcolors.ENDC)
-    #p#print(a.grad)
+    ##pprint(a.grad)
     #print(bcolors.OKGREEN + "Ground truth" + bcolors.ENDC)
-    #p#print(sgrad)
+    ##pprint(sgrad)
 
     try:
         np.testing.assert_array_almost_equal(a.grad, sgrad, decimal=2)
@@ -317,4 +314,5 @@ def test6():
     except:
         #print(bcolors.FAIL + "FAILED :("+bcolors.ENDC)
         np.testing.assert_array_almost_equal(a.grad, sgrad, decimal=2)
+
 
