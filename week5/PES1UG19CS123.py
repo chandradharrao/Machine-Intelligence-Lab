@@ -1,7 +1,5 @@
 import numpy as np
 
-from numpy.core.shape_base import block
-
 class Tensor:
 
     def __init__(self, arr, requires_grad=True):
@@ -63,7 +61,6 @@ class Tensor:
         return out_tensor
 
     def grad_add(self, gradients=None):
-        '''Test for higher dimensional arrays like (mxnxp)'''
         if gradients is None:
             #when backwards call hasnt been given a gradient,then its the call on the loss function L
             gradients=np.ones_like(self.arr)
@@ -92,16 +89,14 @@ class Tensor:
             if operation=="add":
                 grad_res = self.grad_add(gradients)
 
-
             for i,inpt in enumerate([self.history[1],self.history[2]]):
                 #children
                 #call grad on children
                 inpt.backward(grad_res[i])
+
         else: #leaf node
             if self.requires_grad:
                 #leaf node,store res
                 self.grad += gradients
             else:
                 self.zero_grad()
-
-

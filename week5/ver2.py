@@ -315,16 +315,42 @@ def test6():
         print(bcolors.FAIL + "FAILED :("+bcolors.ENDC)
         np.testing.assert_array_almost_equal(a.grad, sgrad, decimal=2)
 
+###new TEST cases###
+def test7():
+    a = Tensor(np.array([[1.0, 2.0], [3.0, 4.0]])) 
+    b = Tensor(np.array([[1.0, 2.0], [3.0, 4.0]])) 
+
+    sgrad = np.array([[106500. ,232852.],[156952. ,343160.]])
+
+    c=b+a+b+a
+    sans = a@b@c@b@a@a@a
+
+    sans.backward()
+    
+    print(bcolors.OKCYAN+"Resultant grad value:" + bcolors.ENDC)
+    pprint(a.grad)
+    print(bcolors.OKGREEN + "Ground truth" + bcolors.ENDC)
+    pprint(sgrad)
+
+    try:
+        np.testing.assert_array_almost_equal(b.grad, sgrad, decimal=2)
+
+        #if successful
+        print(bcolors.OKGREEN + "PASSED :)"+bcolors.ENDC)
+    except:
+        print(bcolors.FAIL + "FAILED :("+bcolors.ENDC)
+        np.testing.assert_array_almost_equal(a.grad, sgrad, decimal=2)
+
 if __name__ == "__main__":
     '''Notes:
         Identity matrix != [[1,1],[1,1]]
         np.dot != py * != np.matmul
     '''
     # test6()
-    a = Tensor(np.array([[1.0, 2.0], [3.0, 4.0]])) 
-    c=a@a
-    if(c.history[1]==c.history[2]):
-        print("Same")
-    else:
-        print("not same")
-
+    # a = Tensor(np.array([[1.0, 2.0], [3.0, 4.0]])) 
+    # c=a@a
+    # if(c.history[1]==c.history[2]):
+    #     print("Same")
+    # else:
+    #     print("not same")
+    test7()
