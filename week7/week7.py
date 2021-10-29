@@ -141,14 +141,12 @@ class AdaBoost:
         for alpha in self.alphas:
             alpha_sum+=alpha
 
-        total=None
+        total=0
         for i,stump in enumerate(self.stumps):
             weighted_stump_pred = stump.predict(X)*self.alphas[i]
-            if i==0: #first time
-                total=weighted_stump_pred
-            else:
-                total+=weighted_stump_pred
-        total/=alpha_sum
+            total+=weighted_stump_pred
+        if alpha_sum: #if not zero
+            total/=alpha_sum
         weighted_avg_pred=np.floor(total)
         return weighted_avg_pred
 
