@@ -7,6 +7,7 @@ from collections import deque
 optimization : use numpy array
 multiply in the end
 check for underflow
+deque pop time complexity?
 '''
 
 class HMM:
@@ -61,34 +62,38 @@ class HMM:
             dp[0][0] = self.pi[0]*self.B[0][init_obs_state_indx]
             dp[1][0] = self.pi[1]*self.B[1][init_obs_state_indx]
         
-        #pointer to hold the state recently entered into the queue
+        #store states recently entered into the queue
         path_backtrack = deque()
-        seq_pointer = 0
-        #the starting state would be the maximum of the N starting state
-        max_prob = dp[0][0]
-        to_insert = None
-        for i in range(1,self.N):
-            if dp[i][0]>max_prob:
-                max_prob=dp[i][0]
-                to_insert = self.states[i]
-        path_backtrack.append(to_insert)
+        insertion_level=None
 
         #dp iteration
         for j in range(1,seq_len): #j->mood we are in
             for i in range(0,self.N): #i->hidden state we are in
                 mood_name=seq[j]
                 mood_indx = self.emissions_dict[mood_name]
+
                 for k in range(0,self.N): #k->from all the N prev states
                     print("j,i,k",j,i,k)
-                    print("incoming prob",dp[k][j-1],"*",self.A[k][i],"*",self.B[i][mood_indx],"=",self.B[i][mood_indx]*self.A[k][i]*dp[i][j-1])
+                    print("insertion_lvl",insertion_level)
+                    print("incoming prob",dp[k][j-1],"*",self.A[k][i],"*",self.B[i][mood_indx],"=",self.B[i][mood_indx]*self.A[k][i]*dp[k][j-1])
                     input()
 
                     incoming_probability = self.B[i][mood_indx]*self.A[k][i]*dp[k][j-1] #this can be optimized by multiplying sef.B[i][mood_indx] in the end
-                    dp[i][j] = max(dp[i][j],incoming_probability)
-                    # if dp[i][j] < incoming_probability:
+                   
+                   
 
                     print("dp",np.matrix(dp))
+                    print("path",path_backtrack)
 
+        #choose last column max prbability state
+        max_prob = float("-inf")
+        to_insert = None
+        for i in range(0,self.N):
+            if dp[i][-1]>max_prob:
+                max_prob=dp[i][-1]
+                to_insert = self.states[i]
+        path_backtrack.append(to_insert)
+        print("final path",path_backtrack)
 
 if __name__=="__main__":
     def test_1():
