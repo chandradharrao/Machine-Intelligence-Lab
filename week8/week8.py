@@ -57,30 +57,37 @@ class HMM:
         #initialize
         init_obs_state_name = seq[0]
         init_obs_state_indx = self.emissions_dict[init_obs_state_name]
-        dp[0][0] = self.pi[0]*self.B[0][init_obs_state_indx]
-        dp[1][0] = self.pi[1]*self.B[1][init_obs_state_indx]
+        for i in range(0,self.N):
+            dp[0][0] = self.pi[0]*self.B[0][init_obs_state_indx]
+            dp[1][0] = self.pi[1]*self.B[1][init_obs_state_indx]
         
         #pointer to hold the state recently entered into the queue
         path_backtrack = deque()
         seq_pointer = 0
+        #the starting state would be the maximum of the N starting state
+        max_prob = dp[0][0]
+        to_insert = None
+        for i in range(1,self.N):
+            if dp[i][0]>max_prob:
+                max_prob=dp[i][0]
+                to_insert = self.states[i]
+        path_backtrack.append(to_insert)
 
         #dp iteration
         for j in range(1,seq_len): #j->mood we are in
-            dest_row=0
             for i in range(0,self.N): #i->hidden state we are in
-                print("indices",(i,j))
                 mood_name=seq[j]
                 mood_indx = self.emissions_dict[mood_name]
-                
-                print("incoming prob",dp[i][j-1],"*",self.A[i][dest_row],"*",self.B[dest_row][mood_indx],"=",self.B[dest_row][mood_indx]*self.A[i][dest_row]*dp[i][j-1])
-                input()
+                for k in range(0,self.N): #k->from all the N prev states
+                    print("j,i,k",j,i,k)
+                    print("incoming prob",dp[k][j-1],"*",self.A[k][i],"*",self.B[i][mood_indx],"=",self.B[i][mood_indx]*self.A[k][i]*dp[i][j-1])
+                    input()
 
-                incoming_probability = self.B[dest_row][mood_indx]*self.A[i][dest_row]*dp[i][j-1] #this can be optimized by multiplying sef.B[i][mood_indx] in the end
-                dp[i][j] = max(dp[i][j],incoming_probability)
-                print("dp",dp)
-                #reset dest_row
-            print("dp",dp)
-            dest_row=(dest_row+1)%2
+                    incoming_probability = self.B[i][mood_indx]*self.A[k][i]*dp[k][j-1] #this can be optimized by multiplying sef.B[i][mood_indx] in the end
+                    dp[i][j] = max(dp[i][j],incoming_probability)
+                    # if dp[i][j] < incoming_probability:
+
+                    print("dp",np.matrix(dp))
 
 
 if __name__=="__main__":
