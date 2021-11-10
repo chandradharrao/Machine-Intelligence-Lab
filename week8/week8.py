@@ -1,3 +1,4 @@
+import collections
 from typing import Deque
 import numpy as np
 from collections import deque
@@ -64,26 +65,33 @@ class HMM:
         
         #store states recently entered into the queue
         path_backtrack = deque()
-        insertion_level=None
 
         #dp iteration
         for j in range(1,seq_len): #j->mood we are in
+            column_max_incoming_prob = float("-inf") #for each column store the max prob of incoming state
+            column_max_state=None
             for i in range(0,self.N): #i->hidden state we are in
                 mood_name=seq[j]
                 mood_indx = self.emissions_dict[mood_name]
 
                 for k in range(0,self.N): #k->from all the N prev states
                     print("j,i,k",j,i,k)
-                    print("insertion_lvl",insertion_level)
+                    print("column_max_prob",column_max_incoming_prob)
+                    print("column max state",column_max_state)
                     print("incoming prob",dp[k][j-1],"*",self.A[k][i],"*",self.B[i][mood_indx],"=",self.B[i][mood_indx]*self.A[k][i]*dp[k][j-1])
-                    input()
+                    # input()
 
                     incoming_probability = self.B[i][mood_indx]*self.A[k][i]*dp[k][j-1] #this can be optimized by multiplying sef.B[i][mood_indx] in the end
-                   
-                   
+
+                    if incoming_probability>dp[i][j]: 
+                        dp[i][j] = incoming_probability
+                        if column_max_incoming_prob<dp[i][j]:
+                            column_max_state=self.states[k]
+                            column_max_incoming_prob=dp[i][j]
 
                     print("dp",np.matrix(dp))
-                    print("path",path_backtrack)
+            path_backtrack.append(column_max_state) #update at the end of each column calculation
+            print("path",path_backtrack)
 
         #choose last column max prbability state
         max_prob = float("-inf")
@@ -93,7 +101,9 @@ class HMM:
                 max_prob=dp[i][-1]
                 to_insert = self.states[i]
         path_backtrack.append(to_insert)
-        print("final path",path_backtrack)
+
+        print("final path",list(path_backtrack))
+        return list(path_backtrack)
 
 if __name__=="__main__":
     def test_1():
@@ -129,4 +139,33 @@ if __name__=="__main__":
         seq = model.viterbi_algorithm(ES)
         assert (seq == ['Sunny', 'Sunny', 'Sunny'])
 
-    test_1()
+    
+    def test_2():
+        A = np.array([
+            [0.2, 0.8],
+            [0.7, 0.3]
+        ])
+
+        HS = ['A', 'B']
+        O = ['x', 'y']
+        priors = [0.7, 0.3]
+        B = np.array([
+            [0.4, 0.6],
+            [0.3, 0.7]
+        ])
+        ES = ['x', 'y', 'y']
+        model = HMM(A, HS, O, priors, B)
+        seq = model.viterbi_algorithm(ES)
+        assert(seq == ['A', 'B', 'A'])
+
+    # test_1()
+    test_2()
+
+    '''#for every mood choose the state with max probability
+                        if insertion_level!=j:
+                            path_backtrack.append(self.states[k])
+                            insertion_level=j
+                        else:
+                            x=path_backtrack.pop()
+                            print("popped state",x)
+                            path_backtrack.append(self.states[k])'''
