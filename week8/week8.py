@@ -1,11 +1,8 @@
-import collections
-from typing import Deque
 import numpy as np
-from collections import deque
 
 '''
 ######CHECK############
-optimization : use numpy array
+optimization : using numpy array
 multiply in the end
 check for underflow
 deque pop time complexity?
@@ -59,12 +56,11 @@ class HMM:
         #initialize
         init_obs_state_name = seq[0]
         init_obs_state_indx = self.emissions_dict[init_obs_state_name]
-        for i in range(0,self.N):
-            dp[0][0] = self.pi[0]*self.B[0][init_obs_state_indx]
-            dp[1][0] = self.pi[1]*self.B[1][init_obs_state_indx]
+        for i in range(0,self.N): #iterate through al the states for seq[0]
+            dp[i][0] = self.pi[i]*self.B[i][init_obs_state_indx]
         
         #store states recently entered into the queue
-        path_backtrack = deque()
+        path_backtrack = []
 
         #dp iteration
         for j in range(1,seq_len): #j->mood we are in
@@ -102,8 +98,8 @@ class HMM:
                 to_insert = self.states[i]
         path_backtrack.append(to_insert)
 
-        print("final path",list(path_backtrack))
-        return list(path_backtrack)
+        print("final path",path_backtrack)
+        return path_backtrack
 
 if __name__=="__main__":
     def test_1():
@@ -160,12 +156,3 @@ if __name__=="__main__":
 
     # test_1()
     test_2()
-
-    '''#for every mood choose the state with max probability
-                        if insertion_level!=j:
-                            path_backtrack.append(self.states[k])
-                            insertion_level=j
-                        else:
-                            x=path_backtrack.pop()
-                            print("popped state",x)
-                            path_backtrack.append(self.states[k])'''
