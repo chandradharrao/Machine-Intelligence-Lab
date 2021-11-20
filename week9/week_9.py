@@ -90,7 +90,7 @@ class KMeansClustering:
             data: M x D Matrix(M training samples with D attributes each)(numpy float)
         Change self.centroids
         """
-        print(self.centroids.shape) #5 clusters with 5 dim each
+        # print(self.centroids.shape) #5 clusters with 5 dim each
         # print(self.centroids)
         hmap = {} #cluster with points
         # print(cluster_assgn)
