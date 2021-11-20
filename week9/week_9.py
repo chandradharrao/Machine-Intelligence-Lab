@@ -91,20 +91,26 @@ class KMeansClustering:
         Change self.centroids
         """
         print(self.centroids.shape) #5 clusters with 5 dim each
-        print(self.centroids)
+        # print(self.centroids)
         hmap = {} #cluster with points
-        print(cluster_assgn)
+        # print(cluster_assgn)
+        # print(len(data)==len(cluster_assgn))
+        # test = {}
+
         for i in range(len(cluster_assgn)):
             cluster = cluster_assgn[i]
             if cluster in hmap:
                 hmap[cluster].append(data[i])
+                # test[cluster].append(i)
             else:
-                hmap[cluster] = []
+                hmap[cluster] = [data[i]]
+            #     test[cluster] = [i]
+            # print(test)
 
         for k,v in hmap.items(): #k->cluster #,v->array of points of the cluster
             self.centroids[k] = np.mean(v,axis=0,dtype=np.float64)
-            print("-----------------")
-            print(np.mean(v,axis=0))
+            # print("-----------------")
+            # print(np.mean(v,axis=0))
             # print(self.centroids)
 
     def evaluate(self, data):
@@ -238,7 +244,9 @@ if __name__ == "__main__":
 
 
     def assert_close(x, y):
-
+        print("x",x)
+        print("y",y)
+        
         assert abs(x-y) < 1.5 * 1e-2
 
     def test1():
