@@ -1,6 +1,5 @@
 import numpy as np
 
-
 class KMeansClustering:
     """
     K-Means Clustering Model
@@ -64,7 +63,7 @@ class KMeansClustering:
             min_dist = float("inf")
             for j,centroid in enumerate(centroids):
                 curr_dist = np.linalg.norm(point-centroid)
-                if curr_dist < min_dist:
+                if curr_dist <= min_dist:
                     min_dist = curr_dist
                     assigned_centroids[i] = j
         return assigned_centroids
@@ -123,5 +122,4 @@ class KMeansClustering:
             centroid = self.centroids[i] #centroid of cluster i
             for point in hmap[i]:
                 J+=(np.linalg.norm(point-centroid)**2) #sqr of norm
-
         return J
